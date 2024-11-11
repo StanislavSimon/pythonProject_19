@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Posts</title>
+    <style>
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+        }
+        .pagination li {
+            margin: 0 5px;
+        }
+        .pagination a {
+            text-decoration: none;
+            padding: 8px 12px;
+            border: 1px solid #007BFF;
+            color: #007BFF;
+            border-radius: 5px;
+        }
+        .pagination a:hover {
+            background-color: #007BFF;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Blog Posts</h1>
+    <ul>
+        {% for post in page_obj %}
+            <li>
+                <h2>{{ post.title }}</h2>
+                <p>{{ post.content }}</p>
+                <p><small>Published on: {{ post.published_date }}</small></p>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div>
+        <label for="page_size">Posts per page:</label>
+        <select id="page_size" onchange="changePageSize(this.value)">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+        </select>
+    </div>
+
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+            <li><a href="?page=1">First</a></li>
+            <li><a href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% endif %}
+
+        <li>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</li>
+
+        {% if page_obj.has_next %}
+            <li><a href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            <li><a href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+        {% endif %}
+    </ul>
+
+    <script>
+        function changePageSize(size) {
+            const url = new URL(window.location);
+            url.searchParams.set('page_size', size);
+            window.location = url;
+        }
+    </script>
+</body>
+</html>
